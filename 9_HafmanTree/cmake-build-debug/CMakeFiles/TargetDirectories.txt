@@ -1,0 +1,3 @@
+/Users/trimkate/Desktop/My/Made/Algoritms/9_HafmanTree/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/trimkate/Desktop/My/Made/Algoritms/9_HafmanTree/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/trimkate/Desktop/My/Made/Algoritms/9_HafmanTree/cmake-build-debug/CMakeFiles/9_HafmanTree.dir

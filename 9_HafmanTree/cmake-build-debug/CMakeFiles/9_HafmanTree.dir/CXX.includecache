@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/trimkate/Desktop/My/Made/Algoritms/9_HafmanTree/Huffman.h
+vector
+-
+iostream
+-
+fstream
+-
+string
+-
+
+/Users/trimkate/Desktop/My/Made/Algoritms/9_HafmanTree/main.cpp
+vector
+-
+map
+-
+list
+-
+Huffman.h
+/Users/trimkate/Desktop/My/Made/Algoritms/9_HafmanTree/Huffman.h
+

@@ -1,0 +1,227 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red173\green169\blue32;\red32\green32\blue32;\red88\green118\blue71;
+\red191\green100\blue38;\red171\green173\blue198;\red166\green165\blue220;\red153\green168\blue186;\red128\green93\blue148;
+\red109\green109\blue109;\red254\green187\blue91;\red125\green122\blue28;\red78\green122\blue119;\red86\green132\blue173;
+}
+{\*\expandedcolortbl;;\csgenericrgb\c67843\c66275\c12549;\csgenericrgb\c12549\c12549\c12549;\csgenericrgb\c34510\c46275\c27843;
+\csgenericrgb\c74902\c39216\c14902;\csgenericrgb\c67059\c67843\c77647;\csgenericrgb\c65098\c64706\c86275;\csgenericrgb\c60000\c65882\c72941;\csgenericrgb\c50196\c36471\c58039;
+\csgenericrgb\c42745\c42745\c42745;\csgenericrgb\c99608\c73333\c35686;\csgenericrgb\c49020\c47843\c10980;\csgenericrgb\c30588\c47843\c46667;\csgenericrgb\c33725\c51765\c67843;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf2 \cb3 #include \cf4 <vector>\
+\cf2 #include \cf4 <map>\
+\cf2 #include \cf4 <list>\
+\cf2 #include \cf4 "Huffman.h"\
+\cf5 typedef unsigned char \cf6 byte\cf5 ;\
+using namespace \cf7 std\cf5 ;\
+\
+class \cf7 Node\cf8 \{\
+\cf5 public\cf8 :\
+    \cf5 int \cf9 a\cf5 ;  \cf10 //\uc0\u1074 \u1077 \u1089 \
+    \cf5 char \cf9 c\cf5 ;  \cf10 //\uc0\u1079 \u1085 \u1072 \u1095 \u1077 \u1085 \u1080 \u1077  \u1083 \u1080 \u1089 \u1090 \u1072 \
+    \cf7 Node \cf8 *\cf9 left\cf5 , \cf8 *\cf9 right\cf5 ;\
+\
+    \cf11 Node\cf8 ()\{\cf9 left\cf8 =\cf9 right\cf8 =\cf12 NULL\cf5 ;\cf8 \}\
+\
+    \cf11 Node\cf8 (\cf7 Node \cf8 *L\cf5 , \cf7 Node \cf8 *R)\
+    \{  \cf9 left \cf8 =  L\cf5 ;\
+        \cf9 right \cf8 = R\cf5 ;\
+        \cf9 a \cf8 = L->\cf9 a \cf8 + R->\cf9 a\cf5 ;  \cf8 \}\
+\}\cf5 ;\
+\
+\cf7 vector\cf8 <\cf5 bool\cf8 > code\cf5 ;\
+\cf7 map\cf8 <\cf5 char,\cf7 vector\cf8 <\cf5 bool\cf8 > > table\cf5 ;\
+\cf7 vector\cf8 <\cf6 byte\cf8 > tree\cf5 ;\
+\
+struct \cf7 Compare\
+\cf8 \{\
+    \cf5 bool \cf13 operator\cf8 ()(\cf5 const \cf7 Node\cf8 * l\cf5 , const \cf7 Node\cf8 * r) \cf5 const \cf8 \{ \cf5 return \cf8 l->\cf9 a \cf8 < r->\cf9 a\cf5 ; \cf8 \}\
+\}\cf5 ;\
+\
+\
+void \cf11 BuildTable\cf8 (\cf7 Node \cf8 *root)\
+\{\
+    \cf5 if \cf8 (root->\cf9 left\cf8 !=\cf12 NULL\cf8 )\
+    \{ code.push_back(\cf14 0\cf8 )\cf5 ;\
+        \cf8 tree.push_back(\cf4 '['\cf8 )\cf5 ;\
+        \cf8 BuildTable(root->\cf9 left\cf8 )\cf5 ;\
+        \cf8 tree.push_back(\cf4 ']'\cf8 )\cf5 ;\
+\
+    \cf8 \} \cf5 else\cf8 \{\
+        \cf5 if \cf8 (root->\cf9 right\cf8 !=\cf12 NULL\cf8 ) \{\
+            tree.push_back(\cf4 '['\cf8 )\cf5 ;\
+            \cf8 tree.push_back(\cf4 ']'\cf8 )\cf5 ;\
+        \cf8 \}\
+    \}\
+\
+    \cf5 if \cf8 (root->\cf9 right\cf8 !=\cf12 NULL\cf8 )\
+    \{ code.push_back(\cf14 1\cf8 )\cf5 ;\
+        \cf8 tree.push_back(\cf4 '['\cf8 )\cf5 ;\
+        \cf8 BuildTable(root->\cf9 right\cf8 )\cf5 ;\
+        \cf8 tree.push_back(\cf4 ']'\cf8 )\cf5 ;\
+    \cf8 \}\cf5 else\cf8 \{\
+        \cf5 if \cf8 (root->\cf9 left\cf8 !=\cf12 NULL\cf8 ) \{\
+            tree.push_back(\cf4 '['\cf8 )\cf5 ;\
+            \cf8 tree.push_back(\cf4 ']'\cf8 )\cf5 ;\
+        \cf8 \}\
+    \}\
+\
+    \cf5 if \cf8 (root->\cf9 left\cf8 ==\cf12 NULL \cf8 && root->\cf9 right\cf8 ==\cf12 NULL\cf8 ) \{\
+        tree.push_back(root->\cf9 c\cf8 )\cf5 ;\
+        \cf8 table\cf13 [\cf8 root->\cf9 c\cf8 ] \cf13 = \cf8 code\cf5 ;\
+    \cf8 \}\
+\
+    code.pop_back()\cf5 ;\
+\cf8 \}\
+\
+\
+\cf5 void \cf11 builtTree\cf8 (\cf7 map\cf8 <\cf5 char, int\cf8 > result)\{\
+    \
+    \cf7 list\cf8 <\cf7 Node\cf8 *> t\cf5 ;\
+    for\cf8 ( \cf7 map\cf8 <\cf5 char,int\cf8 >::\cf6 iterator \cf8 itr=result.begin()\cf5 ; \cf8 itr\cf13 !=\cf8 result.end()\cf5 ; \cf13 ++\cf8 itr)\
+    \{\
+        \cf7 Node \cf8 *p = \cf5 new \cf7 Node\cf5 ;\
+        \cf8 p->\cf9 c \cf8 = itr\cf13 ->\cf9 first\cf5 ;\
+        \cf8 p->\cf9 a \cf8 = itr\cf13 ->\cf9 second\cf5 ;\
+        \cf8 t.push_back(p)\cf5 ;\
+    \cf8 \}\
+    \cf10 //\uc0\u1089 \u1086 \u1079 \u1076 \u1072 \u1077 \u1084  \u1076 \u1077 \u1088 \u1077 \u1074 \u1086 \
+    \cf5 while \cf8 (t.size()!=\cf14 1\cf8 )\
+    \{\
+        t.sort(\cf7 Compare\cf8 ())\cf5 ;\
+\
+        \cf7 Node \cf8 *SonL = t.front()\cf5 ;\
+        \cf8 t.pop_front()\cf5 ;\
+        \cf7 Node \cf8 *SonR = t.front()\cf5 ;\
+        \cf8 t.pop_front()\cf5 ;\
+\
+        \cf7 Node \cf8 *parent = \cf5 new \cf7 Node\cf8 (SonL\cf5 ,\cf8 SonR)\cf5 ;\
+        \cf8 t.push_back(parent)\cf5 ;\
+\
+    \cf8 \}\
+    \cf7 Node\cf8 * root = t.front()\cf5 ;\
+    \cf8 BuildTable(root)\cf5 ;\
+\cf8 \}\
+\
+\
+\cf5 bool \cf11 areEquals\cf8 (\cf7 vector\cf8 <\cf5 bool\cf8 > arr_1\cf5 , \cf7 vector\cf8 <\cf5 bool\cf8 > arr_2)\{\
+    \cf5 if \cf8 (arr_1.size() != arr_2.size())\
+        \cf5 return false;\
+    for\cf8 (\cf5 int \cf8 i = \cf14 0\cf5 ; \cf8 i < arr_1.size()\cf5 ; \cf8 i++)\
+        \cf5 if \cf8 (arr_1\cf13 [\cf8 i] != arr_2\cf13 [\cf8 i])\
+            \cf5 return false;\
+    return true;\
+\cf8 \}\
+\
+\
+\cf5 int \cf11 getTreeFromVector\cf8 (\cf7 vector\cf8 <\cf6 byte\cf8 > vec)\{\
+    \cf7 vector\cf8 <\cf5 bool\cf8 > v\cf5 ;\
+    bool \cf8 flag = \cf5 false;\
+    bool \cf8 isSkip = \cf5 false;\
+    for \cf8 (\cf6 byte \cf8 c: vec)\{\
+        \cf5 if \cf8 (isSkip) \{\
+            isSkip = \cf5 false;\
+            continue;\
+        \cf8 \}\
+        \cf5 if \cf8 (c == \cf4 '['\cf8 )\{\
+            v.push_back(flag)\cf5 ;\
+            continue;\
+        \cf8 \}\
+        \cf5 if \cf8 (c == \cf4 ']'\cf8 ) \{\
+\
+            \cf5 if \cf8 (v.empty())\
+                \cf5 continue;\
+            else\cf8 \{\
+                isSkip = \cf5 true;\
+                \cf8 v.pop_back()\cf5 ;\
+                \cf8 v.push_back(!flag)\cf5 ;\
+            \cf8 \}\
+\
+        \}\
+        \cf5 if \cf8 (c != \cf4 '[' \cf5 and \cf8 c != \cf4 ']'\cf8 )\{\
+            table\cf13 [\cf8 c] \cf13 = \cf8 v\cf5 ;\
+            continue;\
+\
+        \cf8 \}\
+\
+\
+    \}\
+\}\
+\
+\cf10 //------------------------------------------------------------------\
+\cf5 void \cf11 Encode\cf8 (\cf7 IInputStream\cf8 & input\cf5 , \cf7 IOutputStream\cf8 & output)\
+\{\
+    \cf7 vector\cf8 <\cf5 char\cf8 > arr\cf5 ;\
+    \cf7 map\cf8 <\cf5 char, int\cf8 > result\cf5 ;\
+    \cf6 byte \cf8 value\cf5 ;\
+    while \cf8 (input.Read(value))\
+    \{\
+        arr.push_back(value)\cf5 ;\
+        \cf8 result\cf13 [\cf8 value]++\cf5 ;\
+    \cf8 \}\
+    builtTree(result)\cf5 ;\
+    for\cf8 (\cf5 char \cf8 i:tree)\{\
+        output.Write(i)\cf5 ;\
+    \cf8 \}\
+    output.Write(\cf4 '#'\cf8 )\cf5 ;\
+    for \cf8 (\cf5 char \cf8 i :arr)\{\
+        \cf5 for\cf8 (\cf5 char \cf8 res: table\cf13 [\cf8 i])\
+            output.Write(res)\cf5 ;\
+    \cf8 \}\
+\}\
+\
+\cf5 void \cf11 Decode\cf8 (\cf7 IInputStream\cf8 & compressed\cf5 , \cf7 IOutputStream\cf8 & original)\
+\{\
+    \cf7 vector\cf8 <\cf5 bool\cf8 > vec\cf5 ;\
+    \cf6 byte \cf8 value\cf5 ;\
+    \cf8 tree.clear()\cf5 ;\
+    while \cf8 (value != \cf4 '#'\cf8 )\{\
+        tree.push_back(value)\cf5 ;\
+        \cf8 compressed.Read(value)\cf5 ;\
+    \cf8 \}\
+    getTreeFromVector(tree)\cf5 ;\
+    while \cf8 (compressed.Read(value))\
+    \{\
+        vec.push_back(value)\cf5 ;\
+        for\cf8 ( \cf7 map\cf8 <\cf5 char,\cf7 vector\cf8 <\cf5 bool\cf8 >>::\cf6 iterator \cf8 itr=table.begin()\cf5 ; \cf8 itr\cf13 !=\cf8 table.end()\cf5 ; \cf13 ++\cf8 itr)\{\
+            \cf5 if \cf8 (areEquals(itr\cf13 ->\cf9 second \cf5 ,\cf8 vec)) \{\
+                original.Write(itr\cf13 ->\cf9 first\cf8 )\cf5 ;\
+                \cf8 vec.clear()\cf5 ;\
+                break;\
+            \cf8 \}\
+        \}\
+    \}\
+\}\
+\cf10 //------------------------------------------------------------------\
+\
+\
+\cf5 int \cf11 main\cf8 ()\{\
+    \cf5 char \cf8 c[] = \cf4 "This it the best alghorith in the world"\cf5 ;\
+    \cf7 std\cf8 ::\cf7 vector\cf8 <\cf6 byte\cf8 > data \cf5 ;\
+    for\cf8 (\cf5 char \cf8 i : c)\{\
+        data.push_back(i)\cf5 ;\
+    \cf8 \}\
+    \cf7 IInputStream \cf8 original =  \cf7 IInputStream\cf8 (data)\cf5 ;\
+    \cf7 IOutputStream \cf8 compressed\cf5 ;\
+    \cf8 Encode(original\cf5 , \cf8 compressed)\cf5 ;\
+    \cf7 std\cf8 ::\cf7 vector\cf8 <\cf6 byte\cf8 > result = compressed.GetBuffer()\cf5 ;\
+    \cf7 IInputStream \cf8 input =  \cf7 IInputStream\cf8 (result)\cf5 ;\
+    \cf7 IOutputStream \cf8 output\cf5 ;\
+    \cf7 vector\cf8 <\cf5 bool\cf8 > arr_T\cf5 , \cf8 arr_a\cf5 , \cf8 arr\cf5 , \cf8 arr_t\cf5 ;\
+    \cf8 arr \cf13 = \cf8 table\cf13 [\cf4 ' '\cf8 ]\cf5 ;\
+    \cf8 arr_a \cf13 =\cf8 table\cf13 [\cf4 'a'\cf8 ]\cf5 ;\
+    \cf8 arr_T \cf13 = \cf8 table\cf13 [\cf4 'T'\cf8 ]\cf5 ;\
+    \cf8 arr_t \cf13 = \cf8 table\cf13 [\cf4 't'\cf8 ]\cf5 ;\
+    \cf8 Decode(input\cf5 , \cf8 output)\cf5 ;\
+    \cf8 arr \cf13 = \cf8 table\cf13 [\cf4 ' '\cf8 ]\cf5 ;\
+    \cf8 arr_a \cf13 =\cf8 table\cf13 [\cf4 'a'\cf8 ]\cf5 ;\
+    \cf8 arr_T \cf13 = \cf8 table\cf13 [\cf4 'T'\cf8 ]\cf5 ;\
+    \cf8 arr_t \cf13 = \cf8 table\cf13 [\cf4 't'\cf8 ]\cf5 ;\
+    \cf7 std\cf8 ::\cf7 vector\cf8 <\cf6 byte\cf8 > result_2 = output.GetBuffer()\cf5 ;\
+    return \cf14 0\cf5 ;\
+\cf8 \}\
+\
+}
