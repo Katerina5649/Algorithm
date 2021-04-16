@@ -1,3 +1,4 @@
 # Algorithms
-course on C++. All programs are homework for the course. 
-Unfortunately most tasks and comments on Russian, but I hope to translate them soon.
+В данном репозитории представлены мои наработки по алгоритмическим задачами.
+Язык работы C++
+В каждом файле описано условие задачи и представлена моя версия решения.
